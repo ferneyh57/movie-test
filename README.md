@@ -1,5 +1,9 @@
 # Movie & Series App
 
+## Demo
+
+<video src="demo.mp4" width="320" controls></video>
+
 Flutter app que consume la [TMDB API](https://developers.themoviedb.org/) para explorar películas y series.
 
 ## Features
