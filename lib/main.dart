@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:movie_test/core/config/app_config.dart';
 import 'package:movie_test/core/di/injection_container.dart';
 import 'package:movie_test/features/movies/presentation/pages/movies_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AppConfig.validate();
   await initDependencies();
   runApp(const MyApp());
 }
