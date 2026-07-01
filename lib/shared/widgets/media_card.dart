@@ -45,12 +45,16 @@ class MediaCard extends StatelessWidget {
                           ),
                           errorWidget: (_, _, _) => Container(
                             color: Colors.grey.shade800,
-                            child: const Center(child: Icon(Icons.movie, size: 40)),
+                            child: const Center(
+                              child: Icon(Icons.movie, size: 40),
+                            ),
                           ),
                         )
                       : Container(
                           color: Colors.grey.shade800,
-                          child: const Center(child: Icon(Icons.movie, size: 40)),
+                          child: const Center(
+                            child: Icon(Icons.movie, size: 40),
+                          ),
                         ),
                 ),
               ),
@@ -61,10 +65,9 @@ class MediaCard extends StatelessWidget {
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           Row(
             children: [

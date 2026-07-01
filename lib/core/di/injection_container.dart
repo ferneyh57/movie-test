@@ -55,7 +55,9 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SearchMovies(repository: sl()));
 
   // Movies - Presentation
-  sl.registerFactory(() => MovieDetailCubit(getMovieDetail: sl<GetMovieDetail>()));
+  sl.registerFactory(
+    () => MovieDetailCubit(getMovieDetail: sl<GetMovieDetail>()),
+  );
 
   // Series - Data
   sl.registerLazySingleton(() => SeriesApiClient(sl()));
@@ -73,7 +75,9 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SearchSeries(repository: sl()));
 
   // Series - Presentation
-  sl.registerFactory(() => SeriesDetailCubit(getSeriesDetail: sl<GetSeriesDetail>()));
+  sl.registerFactory(
+    () => SeriesDetailCubit(getSeriesDetail: sl<GetSeriesDetail>()),
+  );
 
   // Home
   sl.registerFactory(() => PopularMoviesCubit(getPopularMovies: sl()));
@@ -82,10 +86,12 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => TopRatedSeriesCubit(getTopRatedSeries: sl()));
 
   // Search
-  sl.registerFactory(() => SearchCubit(
-        getPopularMovies: sl(),
-        getPopularSeries: sl(),
-        searchMovies: sl(),
-        searchSeries: sl(),
-      ));
+  sl.registerFactory(
+    () => SearchCubit(
+      getPopularMovies: sl(),
+      getPopularSeries: sl(),
+      searchMovies: sl(),
+      searchSeries: sl(),
+    ),
+  );
 }

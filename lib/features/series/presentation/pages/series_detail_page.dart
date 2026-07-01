@@ -78,21 +78,25 @@ class SeriesDetailContent extends StatelessWidget {
                     ),
                     if (series.voteCount != null) ...[
                       const SizedBox(width: 8),
-                      Text('(${series.voteCount} votes)',
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        '(${series.voteCount} votes)',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                     const Spacer(),
                     if (series.firstAirDate != null)
-                      Text(series.firstAirDate!,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        series.firstAirDate!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Overview',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(series.overview),

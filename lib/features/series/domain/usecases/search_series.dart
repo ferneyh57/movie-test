@@ -7,6 +7,8 @@ class SearchSeries {
 
   const SearchSeries({required this.repository});
 
-  Future<DataState<SeriesListResponseModel>> call(String query, {int page = 1}) =>
-      repository.searchSeries(query, page: page);
+  Future<DataState<SeriesListResponseModel>> call(
+    String query, {
+    int page = 1,
+  }) => repository.searchSeries(query, page: page);
 }

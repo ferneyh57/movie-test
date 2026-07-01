@@ -5,16 +5,15 @@ import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.da
 import 'package:movie_test/features/movies/presentation/cubit/movie_list_state.dart';
 
 class PopularMoviesCubit extends Cubit<MovieListState> {
-  final GetPopularMovies _getPopularMovies;
+  final GetPopularMovies getPopularMovies;
 
-  PopularMoviesCubit({required GetPopularMovies getPopularMovies})
-      : _getPopularMovies = getPopularMovies,
-        super(const MovieListState(isLoading: true)) {
+  PopularMoviesCubit({required this.getPopularMovies})
+    : super(const MovieListState(isLoading: true)) {
     _load();
   }
 
   Future<void> _load() async {
-    final result = await _getPopularMovies();
+    final result = await getPopularMovies();
     if (result is DataSuccess<MovieListResponseModel>) {
       emit(MovieListState(response: result.data));
     } else {
@@ -26,19 +25,21 @@ class PopularMoviesCubit extends Cubit<MovieListState> {
     final response = state.response;
     if (state.isLoading || !state.hasMore || response == null) return;
     emit(state.copyWith(isLoading: true));
-    final result = await _getPopularMovies(response.page + 1);
+    final result = await getPopularMovies(response.page + 1);
     if (result is DataSuccess<MovieListResponseModel>) {
       final existingIds = response.results.map((m) => m.id).toSet();
-      emit(MovieListState(
-        response: response.copyWith(
-          results: [
-            ...response.results,
-            ...result.data.results.where((m) => !existingIds.contains(m.id)),
-          ],
-          page: result.data.page,
-          totalPages: result.data.totalPages,
+      emit(
+        MovieListState(
+          response: response.copyWith(
+            results: [
+              ...response.results,
+              ...result.data.results.where((m) => !existingIds.contains(m.id)),
+            ],
+            page: result.data.page,
+            totalPages: result.data.totalPages,
+          ),
         ),
-      ));
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }

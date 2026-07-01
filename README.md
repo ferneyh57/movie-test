@@ -58,6 +58,12 @@ El estado de cada cubit contiene directamente `MovieListResponseModel` / `Series
 
 Requiere un Access Token de TMDB (Bearer token, distinto de la API key).
 
+> **Nota sobre versiones:** el enunciado pide "Dart 3.35.7 / Flutter 3.35.7",
+> pero esos números no existen en el versioning real de Dart/Flutter (Dart
+> estable actual es 3.12.2; Flutter estable actual es 3.44.x). Se asume que es
+> un typo del enunciado y se usan las versiones estables vigentes, declaradas
+> en `pubspec.yaml` (`sdk: '>=3.12.2'`, `flutter: '>=3.44.4'`).
+
 ```bash
 flutter pub get
 flutter run --dart-define=TMDB_ACCESS_TOKEN=your_token
