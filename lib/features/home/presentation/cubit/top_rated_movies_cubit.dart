@@ -23,19 +23,20 @@ class TopRatedMoviesCubit extends Cubit<MovieListState> {
   }
 
   Future<void> loadMore() async {
-    if (state.isLoading || !state.hasMore) return;
-    emit(MovieListState(response: state.response, isLoading: true));
-    final result = await _getTopRatedMovies(state.response!.page + 1);
+    final response = state.response;
+    if (state.isLoading || !state.hasMore || response == null) return;
+    emit(state.copyWith(isLoading: true));
+    final result = await _getTopRatedMovies(response.page + 1);
     if (result is DataSuccess<MovieListResponseModel>) {
       emit(MovieListState(
-        response: state.response!.copyWith(
-          results: [...state.response!.results, ...result.data.results],
+        response: response.copyWith(
+          results: [...response.results, ...result.data.results],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
       ));
     } else {
-      emit(MovieListState(response: state.response));
+      emit(state.copyWith(isLoading: false));
     }
   }
 }

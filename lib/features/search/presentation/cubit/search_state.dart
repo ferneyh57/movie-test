@@ -20,13 +20,19 @@ abstract class SearchState with _$SearchState {
     String? errorMessage,
   }) = _SearchState;
 
-  bool get hasMoreMovies =>
-      moviesResponse != null && moviesResponse!.page < moviesResponse!.totalPages;
-  bool get hasMoreSeries =>
-      seriesResponse != null && seriesResponse!.page < seriesResponse!.totalPages;
+  bool get hasMoreMovies {
+    final r = moviesResponse;
+    return r != null && r.page < r.totalPages;
+  }
+
+  bool get hasMoreSeries {
+    final r = seriesResponse;
+    return r != null && r.page < r.totalPages;
+  }
 
   List<Movie> get movies =>
       moviesResponse?.results.map(MovieMapper.toEntity).toList() ?? [];
+
   List<Series> get series =>
       seriesResponse?.results.map(SeriesMapper.toEntity).toList() ?? [];
 }

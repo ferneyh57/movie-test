@@ -23,19 +23,20 @@ class PopularSeriesCubit extends Cubit<SeriesListState> {
   }
 
   Future<void> loadMore() async {
-    if (state.isLoading || !state.hasMore) return;
-    emit(SeriesListState(response: state.response, isLoading: true));
-    final result = await _getPopularSeries(state.response!.page + 1);
+    final response = state.response;
+    if (state.isLoading || !state.hasMore || response == null) return;
+    emit(state.copyWith(isLoading: true));
+    final result = await _getPopularSeries(response.page + 1);
     if (result is DataSuccess<SeriesListResponseModel>) {
       emit(SeriesListState(
-        response: state.response!.copyWith(
-          results: [...state.response!.results, ...result.data.results],
+        response: response.copyWith(
+          results: [...response.results, ...result.data.results],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
       ));
     } else {
-      emit(SeriesListState(response: state.response));
+      emit(state.copyWith(isLoading: false));
     }
   }
 }

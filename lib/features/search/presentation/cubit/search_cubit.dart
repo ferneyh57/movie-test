@@ -65,15 +65,16 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<void> loadMoreMovies() async {
-    if (state.isLoading || !state.hasMoreMovies) return;
+    final moviesResponse = state.moviesResponse;
+    if (state.isLoading || !state.hasMoreMovies || moviesResponse == null) return;
     final query = state.query;
     final result = query.isEmpty
-        ? await _getPopularMovies(state.moviesResponse!.page + 1)
-        : await _searchMovies(query, page: state.moviesResponse!.page + 1);
+        ? await _getPopularMovies(moviesResponse.page + 1)
+        : await _searchMovies(query, page: moviesResponse.page + 1);
     if (result is DataSuccess<MovieListResponseModel>) {
       emit(state.copyWith(
-        moviesResponse: state.moviesResponse!.copyWith(
-          results: [...state.moviesResponse!.results, ...result.data.results],
+        moviesResponse: moviesResponse.copyWith(
+          results: [...moviesResponse.results, ...result.data.results],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
@@ -82,15 +83,16 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<void> loadMoreSeries() async {
-    if (state.isLoading || !state.hasMoreSeries) return;
+    final seriesResponse = state.seriesResponse;
+    if (state.isLoading || !state.hasMoreSeries || seriesResponse == null) return;
     final query = state.query;
     final result = query.isEmpty
-        ? await _getPopularSeries(state.seriesResponse!.page + 1)
-        : await _searchSeries(query, page: state.seriesResponse!.page + 1);
+        ? await _getPopularSeries(seriesResponse.page + 1)
+        : await _searchSeries(query, page: seriesResponse.page + 1);
     if (result is DataSuccess<SeriesListResponseModel>) {
       emit(state.copyWith(
-        seriesResponse: state.seriesResponse!.copyWith(
-          results: [...state.seriesResponse!.results, ...result.data.results],
+        seriesResponse: seriesResponse.copyWith(
+          results: [...seriesResponse.results, ...result.data.results],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
