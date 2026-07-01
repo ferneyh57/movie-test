@@ -2,7 +2,7 @@
 
 ## Demo
 
-<video src="demo.mp4" width="320" controls></video>
+<video src="https://github.com/ferneyh57/movie-test/releases/download/demo-v1/demo.mp4" controls width="320"></video>
 
 Flutter app que consume la [TMDB API](https://developers.themoviedb.org/) para explorar películas y series.
 
