@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:movie_test/core/network/network_client.dart';
+import 'package:movie_test/features/movies/data/datasources/movie_api_client.dart';
 import 'package:movie_test/features/movies/data/datasources/movie_remote_datasource.dart';
 import 'package:movie_test/features/movies/data/repositories/movie_repository_impl.dart';
 import 'package:movie_test/features/movies/domain/repositories/movie_repository.dart';
@@ -12,8 +13,10 @@ final sl = GetIt.instance;
 Future<void> initDependencies() async {
   sl.registerLazySingleton<Dio>(() => createDioClient());
 
+  sl.registerLazySingleton(() => MovieApiClient(sl()));
+
   sl.registerLazySingleton<MovieRemoteDataSource>(
-    () => MovieRemoteDataSourceImpl(dio: sl()),
+    () => MovieRemoteDataSourceImpl(apiClient: sl()),
   );
 
   sl.registerLazySingleton<MovieRepository>(

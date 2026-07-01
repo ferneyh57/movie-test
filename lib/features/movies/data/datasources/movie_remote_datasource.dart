@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import '../models/movie_model.dart';
+import 'movie_api_client.dart';
 
 abstract interface class MovieRemoteDataSource {
   Future<List<MovieModel>> getPopularMovies();
@@ -7,22 +7,17 @@ abstract interface class MovieRemoteDataSource {
 }
 
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
-  final Dio _dio;
+  final MovieApiClient _apiClient;
 
-  const MovieRemoteDataSourceImpl({required Dio dio}) : _dio = dio;
+  const MovieRemoteDataSourceImpl({required MovieApiClient apiClient})
+      : _apiClient = apiClient;
 
   @override
   Future<List<MovieModel>> getPopularMovies() async {
-    final response = await _dio.get('/movie/popular');
-    final results = response.data['results'] as List;
-    return results
-        .map((json) => MovieModel.fromJson(json as Map<String, dynamic>))
-        .toList();
+    final response = await _apiClient.getPopularMovies();
+    return response.results;
   }
 
   @override
-  Future<MovieModel> getMovieDetail(int id) async {
-    final response = await _dio.get('/movie/$id');
-    return MovieModel.fromJson(response.data as Map<String, dynamic>);
-  }
+  Future<MovieModel> getMovieDetail(int id) => _apiClient.getMovieDetail(id);
 }
