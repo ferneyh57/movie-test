@@ -12,7 +12,7 @@ class SeriesRemoteDataSourceImpl implements SeriesRemoteDataSource {
   final SeriesApiClient _apiClient;
 
   const SeriesRemoteDataSourceImpl({required SeriesApiClient apiClient})
-      : _apiClient = apiClient;
+      : _apiClient = apiClient; // ignore: prefer_initializing_formals
 
   @override
   Future<List<SeriesModel>> getPopularSeries() async {

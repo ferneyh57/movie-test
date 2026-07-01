@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:movie_test/core/error/failures.dart';
+import 'package:movie_test/core/utils/data_state.dart';
 import 'package:movie_test/features/series/domain/entities/series.dart';
 import 'package:movie_test/features/series/domain/repositories/series_repository.dart';
 import '../datasources/series_remote_datasource.dart';
@@ -9,43 +10,42 @@ class SeriesRepositoryImpl implements SeriesRepository {
   final SeriesRemoteDataSource _remoteDataSource;
 
   const SeriesRepositoryImpl({required SeriesRemoteDataSource remoteDataSource})
-      : _remoteDataSource = remoteDataSource;
+      : _remoteDataSource = remoteDataSource; // ignore: prefer_initializing_formals
 
   @override
-  Future<List<Series>> getPopularSeries() => _execute(
+  Future<DataState<List<Series>>> getPopularSeries() => _execute(
         () async => (await _remoteDataSource.getPopularSeries())
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
   @override
-  Future<List<Series>> getTopRatedSeries() => _execute(
+  Future<DataState<List<Series>>> getTopRatedSeries() => _execute(
         () async => (await _remoteDataSource.getTopRatedSeries())
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
   @override
-  Future<Series> getSeriesDetail(int id) => _execute(
-        () async => SeriesMapper.toEntity(
-          await _remoteDataSource.getSeriesDetail(id),
-        ),
+  Future<DataState<Series>> getSeriesDetail(int id) => _execute(
+        () async =>
+            SeriesMapper.toEntity(await _remoteDataSource.getSeriesDetail(id)),
       );
 
   @override
-  Future<List<Series>> searchSeries(String query) => _execute(
+  Future<DataState<List<Series>>> searchSeries(String query) => _execute(
         () async => (await _remoteDataSource.searchSeries(query))
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
-  Future<T> _execute<T>(Future<T> Function() action) async {
+  Future<DataState<T>> _execute<T>(Future<T> Function() action) async {
     try {
-      return await action();
+      return DataSuccess(await action());
     } on DioException catch (e) {
-      throw NetworkFailure(e.message ?? 'Network error');
+      return DataFailure(NetworkFailure(e.message ?? 'Network error'));
     } catch (_) {
-      throw const UnknownFailure();
+      return const DataFailure(UnknownFailure());
     }
   }
 }

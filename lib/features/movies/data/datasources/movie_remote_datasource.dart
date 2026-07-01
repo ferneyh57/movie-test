@@ -12,7 +12,7 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   final MovieApiClient _apiClient;
 
   const MovieRemoteDataSourceImpl({required MovieApiClient apiClient})
-      : _apiClient = apiClient;
+      : _apiClient = apiClient; // ignore: prefer_initializing_formals
 
   @override
   Future<List<MovieModel>> getPopularMovies() async {

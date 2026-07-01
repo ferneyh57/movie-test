@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_test/core/config/app_config.dart';
 import 'package:movie_test/core/di/injection_container.dart';
-import 'package:movie_test/features/movies/presentation/pages/movies_page.dart';
+import 'package:movie_test/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       title: 'Movie Test',
-      home: MoviesPage(),
+      routerConfig: appRouter,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
     );
   }
 }
