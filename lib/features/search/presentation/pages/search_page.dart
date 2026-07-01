@@ -82,7 +82,8 @@ class SearchViewState extends State<SearchView> {
                   title: 'Movies',
                   items: state.movies,
                   hasMore: state.hasMoreMovies,
-                  onLoadMore: () => context.read<SearchCubit>().loadMoreMovies(),
+                  onLoadMore: () =>
+                      context.read<SearchCubit>().loadMoreMovies(),
                   itemBuilder: (movie) {
                     final tag = 'search_movie_${movie.id}';
                     return MediaCard(
@@ -91,7 +92,8 @@ class SearchViewState extends State<SearchView> {
                       posterPath: movie.posterPath,
                       voteAverage: movie.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/movie/${movie.id}', extra: tag),
                     );
                   },
                 ),
@@ -100,7 +102,8 @@ class SearchViewState extends State<SearchView> {
                   title: 'Series',
                   items: state.series,
                   hasMore: state.hasMoreSeries,
-                  onLoadMore: () => context.read<SearchCubit>().loadMoreSeries(),
+                  onLoadMore: () =>
+                      context.read<SearchCubit>().loadMoreSeries(),
                   itemBuilder: (series) {
                     final tag = 'search_series_${series.id}';
                     return MediaCard(
@@ -109,7 +112,8 @@ class SearchViewState extends State<SearchView> {
                       posterPath: series.posterPath,
                       voteAverage: series.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/series/${series.id}', extra: tag),
                     );
                   },
                 ),

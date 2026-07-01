@@ -24,7 +24,9 @@ Dio createDioClient() {
           handler.next(options);
         },
         onResponse: (response, handler) {
-          appLogger.i('← ${response.statusCode} ${response.requestOptions.path}');
+          appLogger.i(
+            '← ${response.statusCode} ${response.requestOptions.path}',
+          );
           handler.next(response);
         },
         onError: (error, handler) {

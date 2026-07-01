@@ -72,7 +72,8 @@ class HomeScreen extends StatelessWidget {
                   title: 'Popular Movies',
                   items: state.movies,
                   hasMore: state.hasMore,
-                  onLoadMore: () => context.read<PopularMoviesCubit>().loadMore(),
+                  onLoadMore: () =>
+                      context.read<PopularMoviesCubit>().loadMore(),
                   itemBuilder: (movie) {
                     final tag = 'pop_movie_${movie.id}';
                     return MediaCard(
@@ -81,7 +82,8 @@ class HomeScreen extends StatelessWidget {
                       posterPath: movie.posterPath,
                       voteAverage: movie.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/movie/${movie.id}', extra: tag),
                     );
                   },
                 ),
@@ -91,7 +93,8 @@ class HomeScreen extends StatelessWidget {
                   title: 'Top Rated Movies',
                   items: state.movies,
                   hasMore: state.hasMore,
-                  onLoadMore: () => context.read<TopRatedMoviesCubit>().loadMore(),
+                  onLoadMore: () =>
+                      context.read<TopRatedMoviesCubit>().loadMore(),
                   itemBuilder: (movie) {
                     final tag = 'top_movie_${movie.id}';
                     return MediaCard(
@@ -100,7 +103,8 @@ class HomeScreen extends StatelessWidget {
                       posterPath: movie.posterPath,
                       voteAverage: movie.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/movie/${movie.id}', extra: tag),
                     );
                   },
                 ),
@@ -110,7 +114,8 @@ class HomeScreen extends StatelessWidget {
                   title: 'Popular Series',
                   items: state.series,
                   hasMore: state.hasMore,
-                  onLoadMore: () => context.read<PopularSeriesCubit>().loadMore(),
+                  onLoadMore: () =>
+                      context.read<PopularSeriesCubit>().loadMore(),
                   itemBuilder: (series) {
                     final tag = 'pop_series_${series.id}';
                     return MediaCard(
@@ -119,7 +124,8 @@ class HomeScreen extends StatelessWidget {
                       posterPath: series.posterPath,
                       voteAverage: series.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/series/${series.id}', extra: tag),
                     );
                   },
                 ),
@@ -129,7 +135,8 @@ class HomeScreen extends StatelessWidget {
                   title: 'Top Rated Series',
                   items: state.series,
                   hasMore: state.hasMore,
-                  onLoadMore: () => context.read<TopRatedSeriesCubit>().loadMore(),
+                  onLoadMore: () =>
+                      context.read<TopRatedSeriesCubit>().loadMore(),
                   itemBuilder: (series) {
                     final tag = 'top_series_${series.id}';
                     return MediaCard(
@@ -138,7 +145,8 @@ class HomeScreen extends StatelessWidget {
                       posterPath: series.posterPath,
                       voteAverage: series.voteAverage,
                       heroTag: tag,
-                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                      onTap: () =>
+                          context.push('/series/${series.id}', extra: tag),
                     );
                   },
                 ),
@@ -192,10 +200,12 @@ class _FeaturedBannerState extends State<FeaturedBanner> {
           child: movie.backdropPath != null
               ? CachedNetworkImage(
                   key: ValueKey(movie.id),
-                  imageUrl: '${AppConfig.tmdbImageBaseUrl}${movie.backdropPath}',
+                  imageUrl:
+                      '${AppConfig.tmdbImageBaseUrl}${movie.backdropPath}',
                   fit: BoxFit.cover,
                   placeholder: (_, _) => Container(color: Colors.grey.shade900),
-                  errorWidget: (_, _, _) => Container(color: Colors.grey.shade900),
+                  errorWidget: (_, _, _) =>
+                      Container(color: Colors.grey.shade900),
                 )
               : Container(key: ValueKey(movie.id), color: Colors.grey.shade900),
         ),
@@ -227,7 +237,8 @@ class _FeaturedBannerState extends State<FeaturedBanner> {
                   children: [
                     Text(
                       movie.title,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

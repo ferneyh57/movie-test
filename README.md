@@ -2,7 +2,7 @@
 
 ## Demo
 
-![Demo](demo.gif)
+![Demo](https://private-user-images.githubusercontent.com/42563008/615997541-bf7705e0-caab-497d-bdea-63f483542887.gif?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIiLCJhdWQiOiJyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5NSIsImV4cCI6MTc4Mjk0MjU0MiwibmJmIjoxNzgyOTQyMjQyLCJwYXRoIjoiLzQyNTYzMDA4LzYxNTk5NzU0MS1iZjc3MDVlMC1jYWFiLTQ5N2QtYmRlYS02M2Y0ODM1NDI4ODcuZ2lmP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBTUQzUFFLNFpBJTJGMjAyNjA3MDElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwNzAxVDIxNDQwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTMwMmEwNDU1ZDVhZjIwZmQ1YTQyZGE5YzMxZjg5NzUyNjBhNTllNTcyODQ3ODU2MjQ3YWM4Zjk2OThkMjAyMTkmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1pbWFnZSUyRmdpZiJ9.E3208vKmyODnrysddku-kqPGsKSRgNcE0Xt0MjOyZw8)
 
 Flutter app que consume la [TMDB API](https://developers.themoviedb.org/) para explorar películas y series.
 
@@ -57,6 +57,12 @@ El estado de cada cubit contiene directamente `MovieListResponseModel` / `Series
 ## Setup
 
 Requiere un Access Token de TMDB (Bearer token, distinto de la API key).
+
+> **Nota sobre versiones:** el enunciado pide "Dart 3.35.7 / Flutter 3.35.7",
+> pero esos números no existen en el versioning real de Dart/Flutter (Dart
+> estable actual es 3.12.2; Flutter estable actual es 3.44.x). Se asume que es
+> un typo del enunciado y se usan las versiones estables vigentes, declaradas
+> en `pubspec.yaml` (`sdk: '>=3.12.2'`, `flutter: '>=3.44.4'`).
 
 ```bash
 flutter pub get

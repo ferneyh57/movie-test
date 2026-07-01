@@ -78,21 +78,25 @@ class MovieDetailContent extends StatelessWidget {
                     ),
                     if (movie.voteCount != null) ...[
                       const SizedBox(width: 8),
-                      Text('(${movie.voteCount} votes)',
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        '(${movie.voteCount} votes)',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                     const Spacer(),
                     if (movie.releaseDate != null)
-                      Text(movie.releaseDate!,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        movie.releaseDate!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Overview',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(movie.overview),

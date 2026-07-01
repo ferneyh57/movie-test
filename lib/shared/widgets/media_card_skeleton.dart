@@ -42,11 +42,23 @@ class DetailPageSkeleton extends StatelessWidget {
                       const SizedBox(height: 24),
                       Container(height: 18, width: 100, color: Colors.grey),
                       const SizedBox(height: 12),
-                      Container(height: 14, width: double.infinity, color: Colors.grey),
+                      Container(
+                        height: 14,
+                        width: double.infinity,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(height: 6),
-                      Container(height: 14, width: double.infinity, color: Colors.grey),
+                      Container(
+                        height: 14,
+                        width: double.infinity,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(height: 6),
-                      Container(height: 14, width: double.infinity, color: Colors.grey),
+                      Container(
+                        height: 14,
+                        width: double.infinity,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(height: 6),
                       Container(height: 14, width: 200, color: Colors.grey),
                     ],
@@ -95,7 +107,8 @@ class _SkeletonSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: 5,
             separatorBuilder: (_, _) => const SizedBox(width: 10),
-            itemBuilder: (_, _) => const SizedBox(width: 120, child: MediaCardSkeleton()),
+            itemBuilder: (_, _) =>
+                const SizedBox(width: 120, child: MediaCardSkeleton()),
           ),
         ),
       ],
@@ -144,4 +157,3 @@ class FeaturedBannerSkeleton extends StatelessWidget {
     );
   }
 }
-
