@@ -7,21 +7,20 @@ import '../datasources/series_remote_datasource.dart';
 import '../mappers/series_mapper.dart';
 
 class SeriesRepositoryImpl implements SeriesRepository {
-  final SeriesRemoteDataSource _remoteDataSource;
+  final SeriesRemoteDataSource remoteDataSource;
 
-  const SeriesRepositoryImpl({required SeriesRemoteDataSource remoteDataSource})
-      : _remoteDataSource = remoteDataSource; // ignore: prefer_initializing_formals
+  const SeriesRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<DataState<List<Series>>> getPopularSeries() => _execute(
-        () async => (await _remoteDataSource.getPopularSeries())
+        () async => (await remoteDataSource.getPopularSeries())
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
   @override
   Future<DataState<List<Series>>> getTopRatedSeries() => _execute(
-        () async => (await _remoteDataSource.getTopRatedSeries())
+        () async => (await remoteDataSource.getTopRatedSeries())
             .map(SeriesMapper.toEntity)
             .toList(),
       );
@@ -29,12 +28,12 @@ class SeriesRepositoryImpl implements SeriesRepository {
   @override
   Future<DataState<Series>> getSeriesDetail(int id) => _execute(
         () async =>
-            SeriesMapper.toEntity(await _remoteDataSource.getSeriesDetail(id)),
+            SeriesMapper.toEntity(await remoteDataSource.getSeriesDetail(id)),
       );
 
   @override
   Future<DataState<List<Series>>> searchSeries(String query) => _execute(
-        () async => (await _remoteDataSource.searchSeries(query))
+        () async => (await remoteDataSource.searchSeries(query))
             .map(SeriesMapper.toEntity)
             .toList(),
       );

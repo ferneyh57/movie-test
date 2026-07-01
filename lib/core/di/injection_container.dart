@@ -12,9 +12,6 @@ import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.da
 import 'package:movie_test/features/movies/domain/usecases/get_top_rated_movies.dart';
 import 'package:movie_test/features/movies/domain/usecases/search_movies.dart';
 import 'package:movie_test/features/movies/presentation/bloc/movie_detail_cubit.dart';
-import 'package:movie_test/features/movies/presentation/bloc/popular_movies_cubit.dart';
-import 'package:movie_test/features/movies/presentation/bloc/top_rated_movies_cubit.dart';
-import 'package:movie_test/features/search/presentation/cubit/search_cubit.dart';
 
 // Series
 import 'package:movie_test/features/series/data/datasources/series_api_client.dart';
@@ -25,9 +22,13 @@ import 'package:movie_test/features/series/domain/usecases/get_popular_series.da
 import 'package:movie_test/features/series/domain/usecases/get_series_detail.dart';
 import 'package:movie_test/features/series/domain/usecases/get_top_rated_series.dart';
 import 'package:movie_test/features/series/domain/usecases/search_series.dart';
-import 'package:movie_test/features/series/presentation/cubit/popular_series_cubit.dart';
 import 'package:movie_test/features/series/presentation/cubit/series_detail_cubit.dart';
-import 'package:movie_test/features/series/presentation/cubit/top_rated_series_cubit.dart';
+
+// Home
+import 'package:movie_test/features/home/presentation/cubit/home_cubit.dart';
+
+// Search
+import 'package:movie_test/features/search/presentation/cubit/search_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -51,8 +52,6 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SearchMovies(repository: sl()));
 
   // Movies - Presentation
-  sl.registerFactory(() => PopularMoviesCubit(getPopularMovies: sl()));
-  sl.registerFactory(() => TopRatedMoviesCubit(getTopRatedMovies: sl()));
   sl.registerFactory(() => MovieDetailCubit(getMovieDetail: sl<GetMovieDetail>()));
 
   // Series - Data
@@ -71,12 +70,20 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SearchSeries(repository: sl()));
 
   // Series - Presentation
-  sl.registerFactory(() => PopularSeriesCubit(getPopularSeries: sl()));
-  sl.registerFactory(() => TopRatedSeriesCubit(getTopRatedSeries: sl()));
-  sl.registerFactory(() => SeriesDetailCubit(getSeriesDetail: sl()));
+  sl.registerFactory(() => SeriesDetailCubit(getSeriesDetail: sl<GetSeriesDetail>()));
 
-  // Search - Presentation
+  // Home
+  sl.registerFactory(() => HomeCubit(
+        getPopularMovies: sl(),
+        getTopRatedMovies: sl(),
+        getPopularSeries: sl(),
+        getTopRatedSeries: sl(),
+      ));
+
+  // Search
   sl.registerFactory(() => SearchCubit(
+        getPopularMovies: sl(),
+        getPopularSeries: sl(),
         searchMovies: sl(),
         searchSeries: sl(),
       ));

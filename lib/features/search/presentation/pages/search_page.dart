@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_test/core/di/injection_container.dart';
-import 'package:movie_test/features/movies/domain/entities/movie.dart';
-import 'package:movie_test/features/series/domain/entities/series.dart';
 import 'package:movie_test/shared/widgets/media_card.dart';
-import 'package:movie_test/shared/widgets/media_grid.dart';
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 
@@ -28,22 +25,18 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => SearchViewState();
 }
 
-class SearchViewState extends State<SearchView>
-    with SingleTickerProviderStateMixin {
+class SearchViewState extends State<SearchView> {
   late final TextEditingController _controller;
-  late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -53,50 +46,76 @@ class SearchViewState extends State<SearchView>
       appBar: AppBar(
         title: TextField(
           controller: _controller,
-          autofocus: false,
+          autofocus: true,
           decoration: const InputDecoration(
             hintText: 'Search movies & series...',
             border: InputBorder.none,
           ),
           onChanged: (query) => context.read<SearchCubit>().search(query),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [Tab(text: 'Movies'), Tab(text: 'Series')],
-        ),
       ),
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
-          if (state.query.isEmpty) {
-            return const Center(child: Text('Search for movies or series'));
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
-          return TabBarView(
-            controller: _tabController,
+          if (state.movies.isEmpty && state.series.isEmpty) {
+            return const Center(child: Text('No results found'));
+          }
+          return ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              MediaGrid<Movie>(
-                isLoading: state.isLoading,
-                errorMessage: state.errorMessage,
-                items: state.movies,
-                itemBuilder: (movie) => MediaCard(
-                  id: movie.id,
-                  title: movie.title,
-                  posterPath: movie.posterPath,
-                  voteAverage: movie.voteAverage,
-                  onTap: () => context.push('/movie/${movie.id}'),
+              if (state.movies.isNotEmpty) ...[
+                Text('Movies', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 220,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.movies.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 10),
+                    itemBuilder: (_, index) {
+                      final movie = state.movies[index];
+                      return SizedBox(
+                        width: 120,
+                        child: MediaCard(
+                          id: movie.id,
+                          title: movie.title,
+                          posterPath: movie.posterPath,
+                          voteAverage: movie.voteAverage,
+                          onTap: () => context.push('/movie/${movie.id}'),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              MediaGrid<Series>(
-                isLoading: state.isLoading,
-                errorMessage: state.errorMessage,
-                items: state.series,
-                itemBuilder: (series) => MediaCard(
-                  id: series.id,
-                  title: series.name,
-                  posterPath: series.posterPath,
-                  voteAverage: series.voteAverage,
-                  onTap: () => context.push('/series/${series.id}'),
+                const SizedBox(height: 16),
+              ],
+              if (state.series.isNotEmpty) ...[
+                Text('Series', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 220,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.series.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 10),
+                    itemBuilder: (_, index) {
+                      final series = state.series[index];
+                      return SizedBox(
+                        width: 120,
+                        child: MediaCard(
+                          id: series.id,
+                          title: series.name,
+                          posterPath: series.posterPath,
+                          voteAverage: series.voteAverage,
+                          onTap: () => context.push('/series/${series.id}'),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+              ],
             ],
           );
         },

@@ -9,29 +9,28 @@ abstract interface class MovieRemoteDataSource {
 }
 
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
-  final MovieApiClient _apiClient;
+  final MovieApiClient apiClient;
 
-  const MovieRemoteDataSourceImpl({required MovieApiClient apiClient})
-      : _apiClient = apiClient; // ignore: prefer_initializing_formals
+  const MovieRemoteDataSourceImpl({required this.apiClient});
 
   @override
   Future<List<MovieModel>> getPopularMovies() async {
-    final response = await _apiClient.getPopularMovies();
+    final response = await apiClient.getPopularMovies();
     return response.results;
   }
 
   @override
   Future<List<MovieModel>> getTopRatedMovies() async {
-    final response = await _apiClient.getTopRatedMovies();
+    final response = await apiClient.getTopRatedMovies();
     return response.results;
   }
 
   @override
-  Future<MovieModel> getMovieDetail(int id) => _apiClient.getMovieDetail(id);
+  Future<MovieModel> getMovieDetail(int id) => apiClient.getMovieDetail(id);
 
   @override
   Future<List<MovieModel>> searchMovies(String query) async {
-    final response = await _apiClient.searchMovies(query);
+    final response = await apiClient.searchMovies(query);
     return response.results;
   }
 }

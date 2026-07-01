@@ -7,21 +7,20 @@ import '../datasources/movie_remote_datasource.dart';
 import '../mappers/movie_mapper.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
-  final MovieRemoteDataSource _remoteDataSource;
+  final MovieRemoteDataSource remoteDataSource;
 
-  const MovieRepositoryImpl({required MovieRemoteDataSource remoteDataSource})
-      : _remoteDataSource = remoteDataSource; // ignore: prefer_initializing_formals
+  const MovieRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<DataState<List<Movie>>> getPopularMovies() => _execute(
-        () async => (await _remoteDataSource.getPopularMovies())
+        () async => (await remoteDataSource.getPopularMovies())
             .map(MovieMapper.toEntity)
             .toList(),
       );
 
   @override
   Future<DataState<List<Movie>>> getTopRatedMovies() => _execute(
-        () async => (await _remoteDataSource.getTopRatedMovies())
+        () async => (await remoteDataSource.getTopRatedMovies())
             .map(MovieMapper.toEntity)
             .toList(),
       );
@@ -29,12 +28,12 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<DataState<Movie>> getMovieDetail(int id) => _execute(
         () async =>
-            MovieMapper.toEntity(await _remoteDataSource.getMovieDetail(id)),
+            MovieMapper.toEntity(await remoteDataSource.getMovieDetail(id)),
       );
 
   @override
   Future<DataState<List<Movie>>> searchMovies(String query) => _execute(
-        () async => (await _remoteDataSource.searchMovies(query))
+        () async => (await remoteDataSource.searchMovies(query))
             .map(MovieMapper.toEntity)
             .toList(),
       );

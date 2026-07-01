@@ -9,30 +9,29 @@ abstract interface class SeriesRemoteDataSource {
 }
 
 class SeriesRemoteDataSourceImpl implements SeriesRemoteDataSource {
-  final SeriesApiClient _apiClient;
+  final SeriesApiClient apiClient;
 
-  const SeriesRemoteDataSourceImpl({required SeriesApiClient apiClient})
-      : _apiClient = apiClient; // ignore: prefer_initializing_formals
+  const SeriesRemoteDataSourceImpl({required this.apiClient});
 
   @override
   Future<List<SeriesModel>> getPopularSeries() async {
-    final response = await _apiClient.getPopularSeries();
+    final response = await apiClient.getPopularSeries();
     return response.results;
   }
 
   @override
   Future<List<SeriesModel>> getTopRatedSeries() async {
-    final response = await _apiClient.getTopRatedSeries();
+    final response = await apiClient.getTopRatedSeries();
     return response.results;
   }
 
   @override
   Future<SeriesModel> getSeriesDetail(int id) =>
-      _apiClient.getSeriesDetail(id);
+      apiClient.getSeriesDetail(id);
 
   @override
   Future<List<SeriesModel>> searchSeries(String query) async {
-    final response = await _apiClient.searchSeries(query);
+    final response = await apiClient.searchSeries(query);
     return response.results;
   }
 }
