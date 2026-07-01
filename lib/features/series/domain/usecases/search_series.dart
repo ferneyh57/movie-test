@@ -1,14 +1,12 @@
-import 'package:movie_test/core/usecase/usecase.dart';
 import 'package:movie_test/core/utils/data_state.dart';
-import '../entities/series.dart';
+import 'package:movie_test/features/series/data/models/series_list_response_model.dart';
 import '../repositories/series_repository.dart';
 
-class SearchSeries implements UseCase<DataState<List<Series>>, String> {
+class SearchSeries {
   final SeriesRepository repository;
 
   const SearchSeries({required this.repository});
 
-  @override
-  Future<DataState<List<Series>>> call(String query) =>
-      repository.searchSeries(query);
+  Future<DataState<SeriesListResponseModel>> call(String query, {int page = 1}) =>
+      repository.searchSeries(query, page: page);
 }

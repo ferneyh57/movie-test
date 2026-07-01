@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:movie_test/core/error/failures.dart';
 import 'package:movie_test/core/utils/data_state.dart';
+import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import 'package:movie_test/features/movies/domain/entities/movie.dart';
 import 'package:movie_test/features/movies/domain/repositories/movie_repository.dart';
 import '../datasources/movie_remote_datasource.dart';
@@ -12,18 +13,12 @@ class MovieRepositoryImpl implements MovieRepository {
   const MovieRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<DataState<List<Movie>>> getPopularMovies({required int page}) => _execute(
-        () async => (await remoteDataSource.getPopularMovies(page: page))
-            .map(MovieMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<MovieListResponseModel>> getPopularMovies({required int page}) =>
+      _execute(() => remoteDataSource.getPopularMovies(page: page));
 
   @override
-  Future<DataState<List<Movie>>> getTopRatedMovies({required int page}) => _execute(
-        () async => (await remoteDataSource.getTopRatedMovies(page: page))
-            .map(MovieMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<MovieListResponseModel>> getTopRatedMovies({required int page}) =>
+      _execute(() => remoteDataSource.getTopRatedMovies(page: page));
 
   @override
   Future<DataState<Movie>> getMovieDetail(int id) => _execute(
@@ -31,11 +26,8 @@ class MovieRepositoryImpl implements MovieRepository {
       );
 
   @override
-  Future<DataState<List<Movie>>> searchMovies(String query) => _execute(
-        () async => (await remoteDataSource.searchMovies(query))
-            .map(MovieMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<MovieListResponseModel>> searchMovies(String query, {int page = 1}) =>
+      _execute(() => remoteDataSource.searchMovies(query, page: page));
 
   Future<DataState<T>> _execute<T>(Future<T> Function() action) async {
     try {

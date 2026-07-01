@@ -25,7 +25,10 @@ import 'package:movie_test/features/series/domain/usecases/search_series.dart';
 import 'package:movie_test/features/series/presentation/cubit/series_detail_cubit.dart';
 
 // Home
-import 'package:movie_test/features/home/presentation/cubit/home_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/popular_movies_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/top_rated_movies_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/popular_series_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/top_rated_series_cubit.dart';
 
 // Search
 import 'package:movie_test/features/search/presentation/cubit/search_cubit.dart';
@@ -73,12 +76,10 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => SeriesDetailCubit(getSeriesDetail: sl<GetSeriesDetail>()));
 
   // Home
-  sl.registerFactory(() => HomeCubit(
-        getPopularMovies: sl(),
-        getTopRatedMovies: sl(),
-        getPopularSeries: sl(),
-        getTopRatedSeries: sl(),
-      ));
+  sl.registerFactory(() => PopularMoviesCubit(getPopularMovies: sl()));
+  sl.registerFactory(() => TopRatedMoviesCubit(getTopRatedMovies: sl()));
+  sl.registerFactory(() => PopularSeriesCubit(getPopularSeries: sl()));
+  sl.registerFactory(() => TopRatedSeriesCubit(getTopRatedSeries: sl()));
 
   // Search
   sl.registerFactory(() => SearchCubit(

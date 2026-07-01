@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_test/core/di/injection_container.dart';
+import 'package:movie_test/features/movies/domain/entities/movie.dart';
+import 'package:movie_test/features/series/domain/entities/series.dart';
 import 'package:movie_test/shared/widgets/media_card.dart';
 import 'package:movie_test/shared/widgets/media_card_skeleton.dart';
+import 'package:movie_test/shared/widgets/media_carousel.dart';
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 
@@ -68,70 +71,49 @@ class SearchViewState extends State<SearchView> {
       ),
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
-          if (state.isLoading) {
-            return const SearchResultsSkeleton();
-          }
+          if (state.isLoading) return const SearchResultsSkeleton();
           if (state.movies.isEmpty && state.series.isEmpty) {
             return const Center(child: Text('No results found'));
           }
           return ListView(
-            padding: const EdgeInsets.all(16),
             children: [
-              if (state.movies.isNotEmpty) ...[
-                Text('Movies', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 220,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.movies.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 10),
-                    itemBuilder: (_, index) {
-                      final movie = state.movies[index];
-                      final tag = 'search_movie_${movie.id}';
-                      return SizedBox(
-                        width: 120,
-                        child: MediaCard(
-                          id: movie.id,
-                          title: movie.title,
-                          posterPath: movie.posterPath,
-                          voteAverage: movie.voteAverage,
-                          heroTag: tag,
-                          onTap: () => context.push('/movie/${movie.id}', extra: tag),
-                        ),
-                      );
-                    },
-                  ),
+              if (state.movies.isNotEmpty)
+                MediaCarousel<Movie>(
+                  title: 'Movies',
+                  items: state.movies,
+                  hasMore: state.hasMoreMovies,
+                  onLoadMore: () => context.read<SearchCubit>().loadMoreMovies(),
+                  itemBuilder: (movie) {
+                    final tag = 'search_movie_${movie.id}';
+                    return MediaCard(
+                      id: movie.id,
+                      title: movie.title,
+                      posterPath: movie.posterPath,
+                      voteAverage: movie.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                    );
+                  },
                 ),
-                const SizedBox(height: 16),
-              ],
-              if (state.series.isNotEmpty) ...[
-                Text('Series', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 220,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.series.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 10),
-                    itemBuilder: (_, index) {
-                      final series = state.series[index];
-                      final tag = 'search_series_${series.id}';
-                      return SizedBox(
-                        width: 120,
-                        child: MediaCard(
-                          id: series.id,
-                          title: series.name,
-                          posterPath: series.posterPath,
-                          voteAverage: series.voteAverage,
-                          heroTag: tag,
-                          onTap: () => context.push('/series/${series.id}', extra: tag),
-                        ),
-                      );
-                    },
-                  ),
+              if (state.series.isNotEmpty)
+                MediaCarousel<Series>(
+                  title: 'Series',
+                  items: state.series,
+                  hasMore: state.hasMoreSeries,
+                  onLoadMore: () => context.read<SearchCubit>().loadMoreSeries(),
+                  itemBuilder: (series) {
+                    final tag = 'search_series_${series.id}';
+                    return MediaCard(
+                      id: series.id,
+                      title: series.name,
+                      posterPath: series.posterPath,
+                      voteAverage: series.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                    );
+                  },
                 ),
-              ],
+              const SizedBox(height: 32),
             ],
           );
         },

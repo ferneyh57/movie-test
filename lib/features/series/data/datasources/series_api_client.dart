@@ -19,5 +19,8 @@ abstract class SeriesApiClient {
   Future<SeriesModel> getSeriesDetail(@Path('id') int id);
 
   @GET('/search/tv')
-  Future<SeriesListResponseModel> searchSeries(@Query('query') String query);
+  Future<SeriesListResponseModel> searchSeries(
+    @Query('query') String query, {
+    @Query('page') int page = 1,
+  });
 }

@@ -1,11 +1,12 @@
+import '../models/movie_list_response_model.dart';
 import '../models/movie_model.dart';
 import 'movie_api_client.dart';
 
 abstract interface class MovieRemoteDataSource {
-  Future<List<MovieModel>> getPopularMovies({required int page});
-  Future<List<MovieModel>> getTopRatedMovies({required int page});
+  Future<MovieListResponseModel> getPopularMovies({required int page});
+  Future<MovieListResponseModel> getTopRatedMovies({required int page});
   Future<MovieModel> getMovieDetail(int id);
-  Future<List<MovieModel>> searchMovies(String query);
+  Future<MovieListResponseModel> searchMovies(String query, {int page = 1});
 }
 
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
@@ -14,23 +15,17 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   const MovieRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<List<MovieModel>> getPopularMovies({required int page}) async {
-    final response = await apiClient.getPopularMovies(page);
-    return response.results;
-  }
+  Future<MovieListResponseModel> getPopularMovies({required int page}) =>
+      apiClient.getPopularMovies(page);
 
   @override
-  Future<List<MovieModel>> getTopRatedMovies({required int page}) async {
-    final response = await apiClient.getTopRatedMovies(page);
-    return response.results;
-  }
+  Future<MovieListResponseModel> getTopRatedMovies({required int page}) =>
+      apiClient.getTopRatedMovies(page);
 
   @override
   Future<MovieModel> getMovieDetail(int id) => apiClient.getMovieDetail(id);
 
   @override
-  Future<List<MovieModel>> searchMovies(String query) async {
-    final response = await apiClient.searchMovies(query);
-    return response.results;
-  }
+  Future<MovieListResponseModel> searchMovies(String query, {int page = 1}) =>
+      apiClient.searchMovies(query, page: page);
 }

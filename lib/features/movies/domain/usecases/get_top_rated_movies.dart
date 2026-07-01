@@ -1,14 +1,12 @@
-import 'package:movie_test/core/usecase/usecase.dart';
 import 'package:movie_test/core/utils/data_state.dart';
-import '../entities/movie.dart';
+import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import '../repositories/movie_repository.dart';
 
-class GetTopRatedMovies implements UseCase<DataState<List<Movie>>, int> {
+class GetTopRatedMovies {
   final MovieRepository repository;
 
   const GetTopRatedMovies({required this.repository});
 
-  @override
-  Future<DataState<List<Movie>>> call(int page) =>
+  Future<DataState<MovieListResponseModel>> call([int page = 1]) =>
       repository.getTopRatedMovies(page: page);
 }

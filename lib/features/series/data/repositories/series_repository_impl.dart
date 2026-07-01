@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:movie_test/core/error/failures.dart';
 import 'package:movie_test/core/utils/data_state.dart';
+import 'package:movie_test/features/series/data/models/series_list_response_model.dart';
 import 'package:movie_test/features/series/domain/entities/series.dart';
 import 'package:movie_test/features/series/domain/repositories/series_repository.dart';
 import '../datasources/series_remote_datasource.dart';
@@ -12,18 +13,12 @@ class SeriesRepositoryImpl implements SeriesRepository {
   const SeriesRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<DataState<List<Series>>> getPopularSeries({required int page}) => _execute(
-        () async => (await remoteDataSource.getPopularSeries(page: page))
-            .map(SeriesMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<SeriesListResponseModel>> getPopularSeries({required int page}) =>
+      _execute(() => remoteDataSource.getPopularSeries(page: page));
 
   @override
-  Future<DataState<List<Series>>> getTopRatedSeries({required int page}) => _execute(
-        () async => (await remoteDataSource.getTopRatedSeries(page: page))
-            .map(SeriesMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<SeriesListResponseModel>> getTopRatedSeries({required int page}) =>
+      _execute(() => remoteDataSource.getTopRatedSeries(page: page));
 
   @override
   Future<DataState<Series>> getSeriesDetail(int id) => _execute(
@@ -31,11 +26,8 @@ class SeriesRepositoryImpl implements SeriesRepository {
       );
 
   @override
-  Future<DataState<List<Series>>> searchSeries(String query) => _execute(
-        () async => (await remoteDataSource.searchSeries(query))
-            .map(SeriesMapper.toEntity)
-            .toList(),
-      );
+  Future<DataState<SeriesListResponseModel>> searchSeries(String query, {int page = 1}) =>
+      _execute(() => remoteDataSource.searchSeries(query, page: page));
 
   Future<DataState<T>> _execute<T>(Future<T> Function() action) async {
     try {

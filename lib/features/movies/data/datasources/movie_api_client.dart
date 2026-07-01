@@ -19,5 +19,8 @@ abstract class MovieApiClient {
   Future<MovieModel> getMovieDetail(@Path('id') int id);
 
   @GET('/search/movie')
-  Future<MovieListResponseModel> searchMovies(@Query('query') String query);
+  Future<MovieListResponseModel> searchMovies(
+    @Query('query') String query, {
+    @Query('page') int page = 1,
+  });
 }

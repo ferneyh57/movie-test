@@ -1,14 +1,12 @@
-import 'package:movie_test/core/usecase/usecase.dart';
 import 'package:movie_test/core/utils/data_state.dart';
-import '../entities/movie.dart';
+import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import '../repositories/movie_repository.dart';
 
-class SearchMovies implements UseCase<DataState<List<Movie>>, String> {
+class SearchMovies {
   final MovieRepository repository;
 
   const SearchMovies({required this.repository});
 
-  @override
-  Future<DataState<List<Movie>>> call(String query) =>
-      repository.searchMovies(query);
+  Future<DataState<MovieListResponseModel>> call(String query, {int page = 1}) =>
+      repository.searchMovies(query, page: page);
 }

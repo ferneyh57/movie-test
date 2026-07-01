@@ -1,64 +1,100 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_test/core/utils/data_state.dart';
-import 'package:movie_test/features/movies/domain/entities/movie.dart';
+import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.dart';
 import 'package:movie_test/features/movies/domain/usecases/search_movies.dart';
-import 'package:movie_test/features/series/domain/entities/series.dart';
+import 'package:movie_test/features/series/data/models/series_list_response_model.dart';
 import 'package:movie_test/features/series/domain/usecases/get_popular_series.dart';
 import 'package:movie_test/features/series/domain/usecases/search_series.dart';
 import 'search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
-  final GetPopularMovies getPopularMovies;
-  final GetPopularSeries getPopularSeries;
-  final SearchMovies searchMovies;
-  final SearchSeries searchSeries;
+  final GetPopularMovies _getPopularMovies;
+  final GetPopularSeries _getPopularSeries;
+  final SearchMovies _searchMovies;
+  final SearchSeries _searchSeries;
 
   SearchCubit({
-    required this.getPopularMovies,
-    required this.getPopularSeries,
-    required this.searchMovies,
-    required this.searchSeries,
-  }) : super(const SearchState()) {
+    required GetPopularMovies getPopularMovies,
+    required GetPopularSeries getPopularSeries,
+    required SearchMovies searchMovies,
+    required SearchSeries searchSeries,
+  })  : _getPopularMovies = getPopularMovies,
+        _getPopularSeries = getPopularSeries,
+        _searchMovies = searchMovies,
+        _searchSeries = searchSeries,
+        super(const SearchState(isLoading: true)) {
     _loadPopular();
   }
 
   Future<void> _loadPopular() async {
-    emit(state.copyWith(isLoading: true));
-    final moviesResult = await getPopularMovies(1);
-    final seriesResult = await getPopularSeries(1);
+    final moviesResult = await _getPopularMovies();
+    final seriesResult = await _getPopularSeries();
     emit(state.copyWith(
       isLoading: false,
-      movies: moviesResult is DataSuccess<List<Movie>> ? moviesResult.data : [],
-      series: seriesResult is DataSuccess<List<Series>> ? seriesResult.data : [],
+      moviesResponse: moviesResult is DataSuccess<MovieListResponseModel>
+          ? moviesResult.data
+          : null,
+      seriesResponse: seriesResult is DataSuccess<SeriesListResponseModel>
+          ? seriesResult.data
+          : null,
     ));
   }
 
   Future<void> search(String query) async {
     if (query.trim().isEmpty) {
+      emit(const SearchState(isLoading: true));
       await _loadPopular();
       return;
     }
     emit(state.copyWith(isLoading: true, query: query, errorMessage: null));
-
-    final moviesResult = await searchMovies(query);
-    final seriesResult = await searchSeries(query);
-
-    final movies = moviesResult is DataSuccess<List<Movie>> ? moviesResult.data : <Movie>[];
-    final series = seriesResult is DataSuccess<List<Series>> ? seriesResult.data : <Series>[];
-
-    String? errorMessage;
-    if (moviesResult is DataFailure<List<Movie>>) {
-      errorMessage = moviesResult.failure.message;
-    } else if (seriesResult is DataFailure<List<Series>>) {
-      errorMessage = seriesResult.failure.message;
-    }
-
+    final moviesResult = await _searchMovies(query);
+    final seriesResult = await _searchSeries(query);
     emit(state.copyWith(
       isLoading: false,
-      movies: movies,
-      series: series,
-      errorMessage: errorMessage,
+      moviesResponse: moviesResult is DataSuccess<MovieListResponseModel>
+          ? moviesResult.data
+          : null,
+      seriesResponse: seriesResult is DataSuccess<SeriesListResponseModel>
+          ? seriesResult.data
+          : null,
+      errorMessage: moviesResult is DataFailure<MovieListResponseModel>
+          ? moviesResult.failure.message
+          : null,
     ));
+  }
+
+  Future<void> loadMoreMovies() async {
+    if (state.isLoading || !state.hasMoreMovies) return;
+    final query = state.query;
+    final result = query.isEmpty
+        ? await _getPopularMovies(state.moviesResponse!.page + 1)
+        : await _searchMovies(query, page: state.moviesResponse!.page + 1);
+    if (result is DataSuccess<MovieListResponseModel>) {
+      emit(state.copyWith(
+        moviesResponse: state.moviesResponse!.copyWith(
+          results: [...state.moviesResponse!.results, ...result.data.results],
+          page: result.data.page,
+          totalPages: result.data.totalPages,
+        ),
+      ));
+    }
+  }
+
+  Future<void> loadMoreSeries() async {
+    if (state.isLoading || !state.hasMoreSeries) return;
+    final query = state.query;
+    final result = query.isEmpty
+        ? await _getPopularSeries(state.seriesResponse!.page + 1)
+        : await _searchSeries(query, page: state.seriesResponse!.page + 1);
+    if (result is DataSuccess<SeriesListResponseModel>) {
+      emit(state.copyWith(
+        seriesResponse: state.seriesResponse!.copyWith(
+          results: [...state.seriesResponse!.results, ...result.data.results],
+          page: result.data.page,
+          totalPages: result.data.totalPages,
+        ),
+      ));
+    }
   }
 }

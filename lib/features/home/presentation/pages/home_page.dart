@@ -6,10 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_test/core/config/app_config.dart';
 import 'package:movie_test/core/di/injection_container.dart';
-import 'package:movie_test/features/home/presentation/cubit/home_cubit.dart';
-import 'package:movie_test/features/home/presentation/cubit/home_state.dart';
+import 'package:movie_test/features/home/presentation/cubit/popular_movies_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/popular_series_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/top_rated_movies_cubit.dart';
+import 'package:movie_test/features/home/presentation/cubit/top_rated_series_cubit.dart';
 import 'package:movie_test/features/movies/domain/entities/movie.dart';
-import 'package:movie_test/features/series/domain/entities/series.dart';
+import 'package:movie_test/features/movies/presentation/cubit/movie_list_state.dart';
+import 'package:movie_test/features/series/presentation/cubit/series_list_state.dart';
 import 'package:movie_test/shared/widgets/media_card.dart';
 import 'package:movie_test/shared/widgets/media_card_skeleton.dart';
 import 'package:movie_test/shared/widgets/media_carousel.dart';
@@ -19,8 +22,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<HomeCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<PopularMoviesCubit>()),
+        BlocProvider(create: (_) => sl<TopRatedMoviesCubit>()),
+        BlocProvider(create: (_) => sl<PopularSeriesCubit>()),
+        BlocProvider(create: (_) => sl<TopRatedSeriesCubit>()),
+      ],
       child: const HomeScreen(),
     );
   }
@@ -31,110 +39,115 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        final cubit = context.read<HomeCubit>();
-
-        return Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 420,
-                pinned: true,
-                stretch: true,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => context.push('/search'),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: const [StretchMode.zoomBackground],
-                  background: state.isLoading
-                      ? const FeaturedBannerSkeleton()
-                      : state.popularMovies.isNotEmpty
-                          ? FeaturedBanner(movies: state.popularMovies.take(5).toList())
-                          : const SizedBox.shrink(),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 420,
+            pinned: true,
+            stretch: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () => context.push('/search'),
+              ),
+              const SizedBox(width: 8),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              stretchModes: const [StretchMode.zoomBackground],
+              background: BlocBuilder<PopularMoviesCubit, MovieListState>(
+                builder: (context, state) {
+                  if (state.isLoading || state.movies.isEmpty) {
+                    return const FeaturedBannerSkeleton();
+                  }
+                  return FeaturedBanner(movies: state.movies.take(5).toList());
+                },
+              ),
+            ),
+          ),
+          SliverList.list(
+            children: [
+              BlocBuilder<PopularMoviesCubit, MovieListState>(
+                builder: (context, state) => MediaCarousel<Movie>(
+                  title: 'Popular Movies',
+                  items: state.movies,
+                  hasMore: state.hasMore,
+                  onLoadMore: () => context.read<PopularMoviesCubit>().loadMore(),
+                  itemBuilder: (movie) {
+                    final tag = 'pop_movie_${movie.id}';
+                    return MediaCard(
+                      id: movie.id,
+                      title: movie.title,
+                      posterPath: movie.posterPath,
+                      voteAverage: movie.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                    );
+                  },
                 ),
               ),
-              SliverList.list(
-                children: [
-                  MediaCarousel<Movie>(
-                    title: 'Popular Movies',
-                    items: state.popularMovies,
-                    hasMore: state.hasMorePopularMovies,
-                    onLoadMore: () => cubit.loadMore(HomeCategory.popularMovies),
-                    itemBuilder: (movie) {
-                      final tag = 'pop_movie_${movie.id}';
-                      return MediaCard(
-                        id: movie.id,
-                        title: movie.title,
-                        posterPath: movie.posterPath,
-                        voteAverage: movie.voteAverage,
-                        heroTag: tag,
-                        onTap: () => context.push('/movie/${movie.id}', extra: tag),
-                      );
-                    },
-                  ),
-                  MediaCarousel<Movie>(
-                    title: 'Top Rated Movies',
-                    items: state.topRatedMovies,
-                    hasMore: state.hasMoreTopRatedMovies,
-                    onLoadMore: () => cubit.loadMore(HomeCategory.topRatedMovies),
-                    itemBuilder: (movie) {
-                      final tag = 'top_movie_${movie.id}';
-                      return MediaCard(
-                        id: movie.id,
-                        title: movie.title,
-                        posterPath: movie.posterPath,
-                        voteAverage: movie.voteAverage,
-                        heroTag: tag,
-                        onTap: () => context.push('/movie/${movie.id}', extra: tag),
-                      );
-                    },
-                  ),
-                  MediaCarousel<Series>(
-                    title: 'Popular Series',
-                    items: state.popularSeries,
-                    hasMore: state.hasMorePopularSeries,
-                    onLoadMore: () => cubit.loadMore(HomeCategory.popularSeries),
-                    itemBuilder: (series) {
-                      final tag = 'pop_series_${series.id}';
-                      return MediaCard(
-                        id: series.id,
-                        title: series.name,
-                        posterPath: series.posterPath,
-                        voteAverage: series.voteAverage,
-                        heroTag: tag,
-                        onTap: () => context.push('/series/${series.id}', extra: tag),
-                      );
-                    },
-                  ),
-                  MediaCarousel<Series>(
-                    title: 'Top Rated Series',
-                    items: state.topRatedSeries,
-                    hasMore: state.hasMoreTopRatedSeries,
-                    onLoadMore: () => cubit.loadMore(HomeCategory.topRatedSeries),
-                    itemBuilder: (series) {
-                      final tag = 'top_series_${series.id}';
-                      return MediaCard(
-                        id: series.id,
-                        title: series.name,
-                        posterPath: series.posterPath,
-                        voteAverage: series.voteAverage,
-                        heroTag: tag,
-                        onTap: () => context.push('/series/${series.id}', extra: tag),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                ],
+              BlocBuilder<TopRatedMoviesCubit, MovieListState>(
+                builder: (context, state) => MediaCarousel<Movie>(
+                  title: 'Top Rated Movies',
+                  items: state.movies,
+                  hasMore: state.hasMore,
+                  onLoadMore: () => context.read<TopRatedMoviesCubit>().loadMore(),
+                  itemBuilder: (movie) {
+                    final tag = 'top_movie_${movie.id}';
+                    return MediaCard(
+                      id: movie.id,
+                      title: movie.title,
+                      posterPath: movie.posterPath,
+                      voteAverage: movie.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/movie/${movie.id}', extra: tag),
+                    );
+                  },
+                ),
               ),
+              BlocBuilder<PopularSeriesCubit, SeriesListState>(
+                builder: (context, state) => MediaCarousel(
+                  title: 'Popular Series',
+                  items: state.series,
+                  hasMore: state.hasMore,
+                  onLoadMore: () => context.read<PopularSeriesCubit>().loadMore(),
+                  itemBuilder: (series) {
+                    final tag = 'pop_series_${series.id}';
+                    return MediaCard(
+                      id: series.id,
+                      title: series.name,
+                      posterPath: series.posterPath,
+                      voteAverage: series.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                    );
+                  },
+                ),
+              ),
+              BlocBuilder<TopRatedSeriesCubit, SeriesListState>(
+                builder: (context, state) => MediaCarousel(
+                  title: 'Top Rated Series',
+                  items: state.series,
+                  hasMore: state.hasMore,
+                  onLoadMore: () => context.read<TopRatedSeriesCubit>().loadMore(),
+                  itemBuilder: (series) {
+                    final tag = 'top_series_${series.id}';
+                    return MediaCard(
+                      id: series.id,
+                      title: series.name,
+                      posterPath: series.posterPath,
+                      voteAverage: series.voteAverage,
+                      heroTag: tag,
+                      onTap: () => context.push('/series/${series.id}', extra: tag),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 32),
             ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
