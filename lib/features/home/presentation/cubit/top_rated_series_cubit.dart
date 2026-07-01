@@ -5,16 +5,15 @@ import 'package:movie_test/features/series/domain/usecases/get_top_rated_series.
 import 'package:movie_test/features/series/presentation/cubit/series_list_state.dart';
 
 class TopRatedSeriesCubit extends Cubit<SeriesListState> {
-  final GetTopRatedSeries _getTopRatedSeries;
+  final GetTopRatedSeries getTopRatedSeries;
 
-  TopRatedSeriesCubit({required GetTopRatedSeries getTopRatedSeries})
-      : _getTopRatedSeries = getTopRatedSeries,
-        super(const SeriesListState(isLoading: true)) {
+  TopRatedSeriesCubit({required this.getTopRatedSeries})
+    : super(const SeriesListState(isLoading: true)) {
     _load();
   }
 
   Future<void> _load() async {
-    final result = await _getTopRatedSeries();
+    final result = await getTopRatedSeries();
     if (result is DataSuccess<SeriesListResponseModel>) {
       emit(SeriesListState(response: result.data));
     } else {
@@ -26,19 +25,21 @@ class TopRatedSeriesCubit extends Cubit<SeriesListState> {
     final response = state.response;
     if (state.isLoading || !state.hasMore || response == null) return;
     emit(state.copyWith(isLoading: true));
-    final result = await _getTopRatedSeries(response.page + 1);
+    final result = await getTopRatedSeries(response.page + 1);
     if (result is DataSuccess<SeriesListResponseModel>) {
       final existingIds = response.results.map((s) => s.id).toSet();
-      emit(SeriesListState(
-        response: response.copyWith(
-          results: [
-            ...response.results,
-            ...result.data.results.where((s) => !existingIds.contains(s.id)),
-          ],
-          page: result.data.page,
-          totalPages: result.data.totalPages,
+      emit(
+        SeriesListState(
+          response: response.copyWith(
+            results: [
+              ...response.results,
+              ...result.data.results.where((s) => !existingIds.contains(s.id)),
+            ],
+            page: result.data.page,
+            totalPages: result.data.totalPages,
+          ),
         ),
-      ));
+      );
     } else {
       emit(state.copyWith(isLoading: false));
     }

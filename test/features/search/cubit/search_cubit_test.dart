@@ -2,20 +2,21 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:movie_test/core/utils/data_state.dart';
-import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.dart';
 import 'package:movie_test/features/movies/domain/usecases/search_movies.dart';
 import 'package:movie_test/features/search/presentation/cubit/search_cubit.dart';
 import 'package:movie_test/features/search/presentation/cubit/search_state.dart';
-import 'package:movie_test/features/series/data/models/series_list_response_model.dart';
 import 'package:movie_test/features/series/domain/usecases/get_popular_series.dart';
 import 'package:movie_test/features/series/domain/usecases/search_series.dart';
 
 import '../../../helpers/mock_data.dart';
 
 class MockGetPopularMovies extends Mock implements GetPopularMovies {}
+
 class MockGetPopularSeries extends Mock implements GetPopularSeries {}
+
 class MockSearchMovies extends Mock implements SearchMovies {}
+
 class MockSearchSeries extends Mock implements SearchSeries {}
 
 void main() {
@@ -32,15 +33,19 @@ void main() {
   });
 
   SearchCubit buildCubit() => SearchCubit(
-        getPopularMovies: mockPopularMovies,
-        getPopularSeries: mockPopularSeries,
-        searchMovies: mockSearchMovies,
-        searchSeries: mockSearchSeries,
-      );
+    getPopularMovies: mockPopularMovies,
+    getPopularSeries: mockPopularSeries,
+    searchMovies: mockSearchMovies,
+    searchSeries: mockSearchSeries,
+  );
 
   void stubPopular() {
-    when(() => mockPopularMovies()).thenAnswer((_) async => DataSuccess(moviePage()));
-    when(() => mockPopularSeries()).thenAnswer((_) async => DataSuccess(seriesPage()));
+    when(
+      () => mockPopularMovies(),
+    ).thenAnswer((_) async => DataSuccess(moviePage()));
+    when(
+      () => mockPopularSeries(),
+    ).thenAnswer((_) async => DataSuccess(seriesPage()));
   }
 
   group('SearchCubit', () {
@@ -50,7 +55,10 @@ void main() {
         setUp: stubPopular,
         build: buildCubit,
         expect: () => [
-          SearchState(moviesResponse: moviePage(), seriesResponse: seriesPage()),
+          SearchState(
+            moviesResponse: moviePage(),
+            seriesResponse: seriesPage(),
+          ),
         ],
       );
     });
@@ -63,10 +71,12 @@ void main() {
         'emits search results for query',
         setUp: () {
           stubPopular();
-          when(() => mockSearchMovies('batman'))
-              .thenAnswer((_) async => DataSuccess(searchMoviesResult));
-          when(() => mockSearchSeries('batman'))
-              .thenAnswer((_) async => DataSuccess(searchSeriesResult));
+          when(
+            () => mockSearchMovies('batman'),
+          ).thenAnswer((_) async => DataSuccess(searchMoviesResult));
+          when(
+            () => mockSearchSeries('batman'),
+          ).thenAnswer((_) async => DataSuccess(searchSeriesResult));
         },
         build: buildCubit,
         act: (cubit) async {
@@ -103,15 +113,29 @@ void main() {
     });
 
     group('loadMoreMovies', () {
-      final page1 = moviePage(page: 1, totalPages: 2, results: [movieModel(id: 1)]);
-      final page2 = moviePage(page: 2, totalPages: 2, results: [movieModel(id: 2)]);
+      final page1 = moviePage(
+        page: 1,
+        totalPages: 2,
+        results: [movieModel(id: 1)],
+      );
+      final page2 = moviePage(
+        page: 2,
+        totalPages: 2,
+        results: [movieModel(id: 2)],
+      );
 
       blocTest<SearchCubit, SearchState>(
         'appends next page of popular movies',
         setUp: () {
-          when(() => mockPopularMovies()).thenAnswer((_) async => DataSuccess(page1));
-          when(() => mockPopularMovies(2)).thenAnswer((_) async => DataSuccess(page2));
-          when(() => mockPopularSeries()).thenAnswer((_) async => DataSuccess(seriesPage()));
+          when(
+            () => mockPopularMovies(),
+          ).thenAnswer((_) async => DataSuccess(page1));
+          when(
+            () => mockPopularMovies(2),
+          ).thenAnswer((_) async => DataSuccess(page2));
+          when(
+            () => mockPopularSeries(),
+          ).thenAnswer((_) async => DataSuccess(seriesPage()));
         },
         build: buildCubit,
         act: (cubit) async {
@@ -133,15 +157,29 @@ void main() {
     });
 
     group('loadMoreSeries', () {
-      final page1 = seriesPage(page: 1, totalPages: 2, results: [seriesModel(id: 1)]);
-      final page2 = seriesPage(page: 2, totalPages: 2, results: [seriesModel(id: 2)]);
+      final page1 = seriesPage(
+        page: 1,
+        totalPages: 2,
+        results: [seriesModel(id: 1)],
+      );
+      final page2 = seriesPage(
+        page: 2,
+        totalPages: 2,
+        results: [seriesModel(id: 2)],
+      );
 
       blocTest<SearchCubit, SearchState>(
         'appends next page of popular series',
         setUp: () {
-          when(() => mockPopularMovies()).thenAnswer((_) async => DataSuccess(moviePage()));
-          when(() => mockPopularSeries()).thenAnswer((_) async => DataSuccess(page1));
-          when(() => mockPopularSeries(2)).thenAnswer((_) async => DataSuccess(page2));
+          when(
+            () => mockPopularMovies(),
+          ).thenAnswer((_) async => DataSuccess(moviePage()));
+          when(
+            () => mockPopularSeries(),
+          ).thenAnswer((_) async => DataSuccess(page1));
+          when(
+            () => mockPopularSeries(2),
+          ).thenAnswer((_) async => DataSuccess(page2));
         },
         build: buildCubit,
         act: (cubit) async {

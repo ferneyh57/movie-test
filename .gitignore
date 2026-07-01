@@ -61,3 +61,5 @@ macos/Flutter/GeneratedPluginRegistrant.swift
 # Environment
 .env
 demo.mp4
+# Demo asset (heavy binary)
+demo.gif

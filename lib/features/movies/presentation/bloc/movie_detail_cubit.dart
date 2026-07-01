@@ -8,7 +8,7 @@ class MovieDetailCubit extends Cubit<MovieDetailState> {
   final UseCase<DataState<Movie>, int> getMovieDetail;
 
   MovieDetailCubit({required this.getMovieDetail})
-      : super(const MovieDetailState());
+    : super(const MovieDetailState());
 
   Future<void> load(int id) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
@@ -16,7 +16,9 @@ class MovieDetailCubit extends Cubit<MovieDetailState> {
     if (result is DataSuccess<Movie>) {
       emit(state.copyWith(movie: result.data, isLoading: false));
     } else if (result is DataFailure<Movie>) {
-      emit(state.copyWith(isLoading: false, errorMessage: result.failure.message));
+      emit(
+        state.copyWith(isLoading: false, errorMessage: result.failure.message),
+      );
     }
   }
 }

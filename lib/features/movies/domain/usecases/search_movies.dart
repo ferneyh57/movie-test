@@ -7,6 +7,8 @@ class SearchMovies {
 
   const SearchMovies({required this.repository});
 
-  Future<DataState<MovieListResponseModel>> call(String query, {int page = 1}) =>
-      repository.searchMovies(query, page: page);
+  Future<DataState<MovieListResponseModel>> call(
+    String query, {
+    int page = 1,
+  }) => repository.searchMovies(query, page: page);
 }

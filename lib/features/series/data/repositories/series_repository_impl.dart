@@ -13,21 +13,26 @@ class SeriesRepositoryImpl implements SeriesRepository {
   const SeriesRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<DataState<SeriesListResponseModel>> getPopularSeries({required int page}) =>
-      _execute(() => remoteDataSource.getPopularSeries(page: page));
+  Future<DataState<SeriesListResponseModel>> getPopularSeries({
+    required int page,
+  }) => _execute(() => remoteDataSource.getPopularSeries(page: page));
 
   @override
-  Future<DataState<SeriesListResponseModel>> getTopRatedSeries({required int page}) =>
-      _execute(() => remoteDataSource.getTopRatedSeries(page: page));
+  Future<DataState<SeriesListResponseModel>> getTopRatedSeries({
+    required int page,
+  }) => _execute(() => remoteDataSource.getTopRatedSeries(page: page));
 
   @override
   Future<DataState<Series>> getSeriesDetail(int id) => _execute(
-        () async => SeriesMapper.toEntity(await remoteDataSource.getSeriesDetail(id)),
-      );
+    () async =>
+        SeriesMapper.toEntity(await remoteDataSource.getSeriesDetail(id)),
+  );
 
   @override
-  Future<DataState<SeriesListResponseModel>> searchSeries(String query, {int page = 1}) =>
-      _execute(() => remoteDataSource.searchSeries(query, page: page));
+  Future<DataState<SeriesListResponseModel>> searchSeries(
+    String query, {
+    int page = 1,
+  }) => _execute(() => remoteDataSource.searchSeries(query, page: page));
 
   Future<DataState<T>> _execute<T>(Future<T> Function() action) async {
     try {
