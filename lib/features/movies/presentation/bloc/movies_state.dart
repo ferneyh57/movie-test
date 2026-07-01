@@ -1,24 +1,13 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:movie_test/features/movies/domain/entities/movie.dart';
 
-class MoviesState {
-  final List<Movie> movies;
-  final bool isLoading;
-  final String? errorMessage;
+part 'movies_state.freezed.dart';
 
-  const MoviesState({
-    this.movies = const [],
-    this.isLoading = false,
-    this.errorMessage,
-  });
-
-  MoviesState copyWith({
-    List<Movie>? movies,
-    bool? isLoading,
+@freezed
+abstract class MoviesState with _$MoviesState {
+  const factory MoviesState({
+    @Default([]) List<Movie> movies,
+    @Default(false) bool isLoading,
     String? errorMessage,
-  }) =>
-      MoviesState(
-        movies: movies ?? this.movies,
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage,
-      );
+  }) = _MoviesState;
 }
