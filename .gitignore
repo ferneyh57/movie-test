@@ -50,3 +50,6 @@ app.*.map.json
 
 # VS Code local config
 .vscode/launch.json
+
+# Environment
+.env
