@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:movie_test/core/error/failures.dart';
 import 'package:movie_test/core/utils/data_state.dart';
 import 'package:movie_test/features/home/presentation/cubit/popular_movies_cubit.dart';
-import 'package:movie_test/features/movies/data/models/movie_list_response_model.dart';
 import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.dart';
 import 'package:movie_test/features/movies/presentation/cubit/movie_list_state.dart';
 

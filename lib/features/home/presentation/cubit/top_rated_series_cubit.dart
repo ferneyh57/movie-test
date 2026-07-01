@@ -28,9 +28,13 @@ class TopRatedSeriesCubit extends Cubit<SeriesListState> {
     emit(state.copyWith(isLoading: true));
     final result = await _getTopRatedSeries(response.page + 1);
     if (result is DataSuccess<SeriesListResponseModel>) {
+      final existingIds = response.results.map((s) => s.id).toSet();
       emit(SeriesListState(
         response: response.copyWith(
-          results: [...response.results, ...result.data.results],
+          results: [
+            ...response.results,
+            ...result.data.results.where((s) => !existingIds.contains(s.id)),
+          ],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),

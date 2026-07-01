@@ -72,9 +72,13 @@ class SearchCubit extends Cubit<SearchState> {
         ? await _getPopularMovies(moviesResponse.page + 1)
         : await _searchMovies(query, page: moviesResponse.page + 1);
     if (result is DataSuccess<MovieListResponseModel>) {
+      final existingIds = moviesResponse.results.map((m) => m.id).toSet();
       emit(state.copyWith(
         moviesResponse: moviesResponse.copyWith(
-          results: [...moviesResponse.results, ...result.data.results],
+          results: [
+            ...moviesResponse.results,
+            ...result.data.results.where((m) => !existingIds.contains(m.id)),
+          ],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
@@ -90,9 +94,13 @@ class SearchCubit extends Cubit<SearchState> {
         ? await _getPopularSeries(seriesResponse.page + 1)
         : await _searchSeries(query, page: seriesResponse.page + 1);
     if (result is DataSuccess<SeriesListResponseModel>) {
+      final existingIds = seriesResponse.results.map((s) => s.id).toSet();
       emit(state.copyWith(
         seriesResponse: seriesResponse.copyWith(
-          results: [...seriesResponse.results, ...result.data.results],
+          results: [
+            ...seriesResponse.results,
+            ...result.data.results.where((s) => !existingIds.contains(s.id)),
+          ],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),

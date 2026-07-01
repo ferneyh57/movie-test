@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
               stretchModes: const [StretchMode.zoomBackground],
               background: BlocBuilder<PopularMoviesCubit, MovieListState>(
                 builder: (context, state) {
-                  if (state.isLoading || state.movies.isEmpty) {
+                  if (state.movies.isEmpty) {
                     return const FeaturedBannerSkeleton();
                   }
                   return FeaturedBanner(movies: state.movies.take(5).toList());

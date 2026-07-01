@@ -28,9 +28,13 @@ class TopRatedMoviesCubit extends Cubit<MovieListState> {
     emit(state.copyWith(isLoading: true));
     final result = await _getTopRatedMovies(response.page + 1);
     if (result is DataSuccess<MovieListResponseModel>) {
+      final existingIds = response.results.map((m) => m.id).toSet();
       emit(MovieListState(
         response: response.copyWith(
-          results: [...response.results, ...result.data.results],
+          results: [
+            ...response.results,
+            ...result.data.results.where((m) => !existingIds.contains(m.id)),
+          ],
           page: result.data.page,
           totalPages: result.data.totalPages,
         ),
