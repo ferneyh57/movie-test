@@ -1,18 +1,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'movie.freezed.dart';
+part 'series.freezed.dart';
 
 @freezed
-abstract class Movie with _$Movie {
-  const factory Movie({
+abstract class Series with _$Series {
+  const factory Series({
     required int id,
-    required String title,
+    required String name,
     required String overview,
     String? posterPath,
     String? backdropPath,
     required double voteAverage,
     int? voteCount,
-    String? releaseDate,
+    String? firstAirDate,
     List<int>? genreIds,
-  }) = _Movie;
+  }) = _Series;
 }

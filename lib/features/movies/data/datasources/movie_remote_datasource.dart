@@ -3,7 +3,9 @@ import 'movie_api_client.dart';
 
 abstract interface class MovieRemoteDataSource {
   Future<List<MovieModel>> getPopularMovies();
+  Future<List<MovieModel>> getTopRatedMovies();
   Future<MovieModel> getMovieDetail(int id);
+  Future<List<MovieModel>> searchMovies(String query);
 }
 
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
@@ -19,5 +21,17 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   }
 
   @override
+  Future<List<MovieModel>> getTopRatedMovies() async {
+    final response = await _apiClient.getTopRatedMovies();
+    return response.results;
+  }
+
+  @override
   Future<MovieModel> getMovieDetail(int id) => _apiClient.getMovieDetail(id);
+
+  @override
+  Future<List<MovieModel>> searchMovies(String query) async {
+    final response = await _apiClient.searchMovies(query);
+    return response.results;
+  }
 }
