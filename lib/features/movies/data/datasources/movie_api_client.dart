@@ -10,10 +10,10 @@ abstract class MovieApiClient {
   factory MovieApiClient(Dio dio, {String baseUrl}) = _MovieApiClient;
 
   @GET('/movie/popular')
-  Future<MovieListResponseModel> getPopularMovies();
+  Future<MovieListResponseModel> getPopularMovies(@Query('page') int page);
 
   @GET('/movie/top_rated')
-  Future<MovieListResponseModel> getTopRatedMovies();
+  Future<MovieListResponseModel> getTopRatedMovies(@Query('page') int page);
 
   @GET('/movie/{id}')
   Future<MovieModel> getMovieDetail(@Path('id') int id);

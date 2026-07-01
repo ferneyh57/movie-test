@@ -15,12 +15,14 @@ final appRouter = GoRouter(
           path: 'movie/:id',
           builder: (context, state) => MovieDetailPage(
             movieId: int.parse(state.pathParameters['id']!),
+            heroTag: state.extra as String?,
           ),
         ),
         GoRoute(
           path: 'series/:id',
           builder: (context, state) => SeriesDetailPage(
             seriesId: int.parse(state.pathParameters['id']!),
+            heroTag: state.extra as String?,
           ),
         ),
         GoRoute(

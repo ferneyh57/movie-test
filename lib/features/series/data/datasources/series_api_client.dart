@@ -10,10 +10,10 @@ abstract class SeriesApiClient {
   factory SeriesApiClient(Dio dio, {String baseUrl}) = _SeriesApiClient;
 
   @GET('/tv/popular')
-  Future<SeriesListResponseModel> getPopularSeries();
+  Future<SeriesListResponseModel> getPopularSeries(@Query('page') int page);
 
   @GET('/tv/top_rated')
-  Future<SeriesListResponseModel> getTopRatedSeries();
+  Future<SeriesListResponseModel> getTopRatedSeries(@Query('page') int page);
 
   @GET('/tv/{id}')
   Future<SeriesModel> getSeriesDetail(@Path('id') int id);

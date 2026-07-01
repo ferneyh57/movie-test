@@ -12,6 +12,11 @@ abstract class HomeState with _$HomeState {
     @Default([]) List<Series> popularSeries,
     @Default([]) List<Series> topRatedSeries,
     @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    @Default(true) bool hasMorePopularMovies,
+    @Default(true) bool hasMoreTopRatedMovies,
+    @Default(true) bool hasMorePopularSeries,
+    @Default(true) bool hasMoreTopRatedSeries,
     String? errorMessage,
   }) = _HomeState;
 }

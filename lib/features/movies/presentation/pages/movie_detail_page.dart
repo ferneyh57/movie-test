@@ -5,11 +5,13 @@ import 'package:movie_test/core/di/injection_container.dart';
 import 'package:movie_test/features/movies/domain/entities/movie.dart';
 import 'package:movie_test/features/movies/presentation/bloc/movie_detail_cubit.dart';
 import 'package:movie_test/features/movies/presentation/bloc/movie_detail_state.dart';
+import 'package:movie_test/shared/widgets/media_card_skeleton.dart';
 
 class MovieDetailPage extends StatelessWidget {
   final int movieId;
+  final String? heroTag;
 
-  const MovieDetailPage({super.key, required this.movieId});
+  const MovieDetailPage({super.key, required this.movieId, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,7 @@ class MovieDetailPage extends StatelessWidget {
       child: BlocBuilder<MovieDetailCubit, MovieDetailState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+            return const DetailPageSkeleton();
           }
           if (state.errorMessage != null) {
             return Scaffold(
@@ -29,7 +29,7 @@ class MovieDetailPage extends StatelessWidget {
             );
           }
           if (state.movie == null) return const SizedBox.shrink();
-          return MovieDetailContent(movie: state.movie!);
+          return MovieDetailContent(movie: state.movie!, heroTag: heroTag);
         },
       ),
     );
@@ -38,11 +38,13 @@ class MovieDetailPage extends StatelessWidget {
 
 class MovieDetailContent extends StatelessWidget {
   final Movie movie;
+  final String? heroTag;
 
-  const MovieDetailContent({super.key, required this.movie});
+  const MovieDetailContent({super.key, required this.movie, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
+    final tag = heroTag ?? 'media_${movie.id}';
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -51,18 +53,15 @@ class MovieDetailContent extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(movie.title),
-              background: movie.backdropPath != null
-                  ? Hero(
-                      tag: 'media_${movie.id}',
-                      child: Image.network(
+              background: Hero(
+                tag: tag,
+                child: movie.backdropPath != null
+                    ? Image.network(
                         '${AppConfig.tmdbImageBaseUrl}${movie.backdropPath}',
                         fit: BoxFit.cover,
-                      ),
-                    )
-                  : Hero(
-                      tag: 'media_${movie.id}',
-                      child: Container(color: Colors.grey.shade800),
-                    ),
+                      )
+                    : Container(color: Colors.grey.shade800),
+              ),
             ),
           ),
           SliverPadding(

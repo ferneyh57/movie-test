@@ -5,11 +5,13 @@ import 'package:movie_test/core/di/injection_container.dart';
 import 'package:movie_test/features/series/domain/entities/series.dart';
 import 'package:movie_test/features/series/presentation/cubit/series_detail_cubit.dart';
 import 'package:movie_test/features/series/presentation/cubit/series_detail_state.dart';
+import 'package:movie_test/shared/widgets/media_card_skeleton.dart';
 
 class SeriesDetailPage extends StatelessWidget {
   final int seriesId;
+  final String? heroTag;
 
-  const SeriesDetailPage({super.key, required this.seriesId});
+  const SeriesDetailPage({super.key, required this.seriesId, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,7 @@ class SeriesDetailPage extends StatelessWidget {
       child: BlocBuilder<SeriesDetailCubit, SeriesDetailState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+            return const DetailPageSkeleton();
           }
           if (state.errorMessage != null) {
             return Scaffold(
@@ -29,7 +29,7 @@ class SeriesDetailPage extends StatelessWidget {
             );
           }
           if (state.series == null) return const SizedBox.shrink();
-          return SeriesDetailContent(series: state.series!);
+          return SeriesDetailContent(series: state.series!, heroTag: heroTag);
         },
       ),
     );
@@ -38,11 +38,13 @@ class SeriesDetailPage extends StatelessWidget {
 
 class SeriesDetailContent extends StatelessWidget {
   final Series series;
+  final String? heroTag;
 
-  const SeriesDetailContent({super.key, required this.series});
+  const SeriesDetailContent({super.key, required this.series, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
+    final tag = heroTag ?? 'media_${series.id}';
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -51,18 +53,15 @@ class SeriesDetailContent extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(series.name),
-              background: series.backdropPath != null
-                  ? Hero(
-                      tag: 'media_${series.id}',
-                      child: Image.network(
+              background: Hero(
+                tag: tag,
+                child: series.backdropPath != null
+                    ? Image.network(
                         '${AppConfig.tmdbImageBaseUrl}${series.backdropPath}',
                         fit: BoxFit.cover,
-                      ),
-                    )
-                  : Hero(
-                      tag: 'media_${series.id}',
-                      child: Container(color: Colors.grey.shade800),
-                    ),
+                      )
+                    : Container(color: Colors.grey.shade800),
+              ),
             ),
           ),
           SliverPadding(

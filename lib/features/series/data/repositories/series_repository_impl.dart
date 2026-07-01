@@ -12,23 +12,22 @@ class SeriesRepositoryImpl implements SeriesRepository {
   const SeriesRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<DataState<List<Series>>> getPopularSeries() => _execute(
-        () async => (await remoteDataSource.getPopularSeries())
+  Future<DataState<List<Series>>> getPopularSeries({required int page}) => _execute(
+        () async => (await remoteDataSource.getPopularSeries(page: page))
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
   @override
-  Future<DataState<List<Series>>> getTopRatedSeries() => _execute(
-        () async => (await remoteDataSource.getTopRatedSeries())
+  Future<DataState<List<Series>>> getTopRatedSeries({required int page}) => _execute(
+        () async => (await remoteDataSource.getTopRatedSeries(page: page))
             .map(SeriesMapper.toEntity)
             .toList(),
       );
 
   @override
   Future<DataState<Series>> getSeriesDetail(int id) => _execute(
-        () async =>
-            SeriesMapper.toEntity(await remoteDataSource.getSeriesDetail(id)),
+        () async => SeriesMapper.toEntity(await remoteDataSource.getSeriesDetail(id)),
       );
 
   @override

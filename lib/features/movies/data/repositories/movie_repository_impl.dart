@@ -12,23 +12,22 @@ class MovieRepositoryImpl implements MovieRepository {
   const MovieRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<DataState<List<Movie>>> getPopularMovies() => _execute(
-        () async => (await remoteDataSource.getPopularMovies())
+  Future<DataState<List<Movie>>> getPopularMovies({required int page}) => _execute(
+        () async => (await remoteDataSource.getPopularMovies(page: page))
             .map(MovieMapper.toEntity)
             .toList(),
       );
 
   @override
-  Future<DataState<List<Movie>>> getTopRatedMovies() => _execute(
-        () async => (await remoteDataSource.getTopRatedMovies())
+  Future<DataState<List<Movie>>> getTopRatedMovies({required int page}) => _execute(
+        () async => (await remoteDataSource.getTopRatedMovies(page: page))
             .map(MovieMapper.toEntity)
             .toList(),
       );
 
   @override
   Future<DataState<Movie>> getMovieDetail(int id) => _execute(
-        () async =>
-            MovieMapper.toEntity(await remoteDataSource.getMovieDetail(id)),
+        () async => MovieMapper.toEntity(await remoteDataSource.getMovieDetail(id)),
       );
 
   @override

@@ -47,6 +47,13 @@ app.*.map.json
 # Generated files
 *.g.dart
 *.freezed.dart
+linux/flutter/generated_plugins.cmake
+linux/flutter/generated_plugin_registrant.h
+linux/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugins.cmake
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugin_registrant.cc
+macos/Flutter/GeneratedPluginRegistrant.swift
 
 # VS Code local config
 .vscode/launch.json

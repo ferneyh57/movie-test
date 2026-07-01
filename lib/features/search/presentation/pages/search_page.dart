@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_test/core/di/injection_container.dart';
 import 'package:movie_test/shared/widgets/media_card.dart';
+import 'package:movie_test/shared/widgets/media_card_skeleton.dart';
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 
@@ -27,6 +30,7 @@ class SearchView extends StatefulWidget {
 
 class SearchViewState extends State<SearchView> {
   late final TextEditingController _controller;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -36,8 +40,16 @@ class SearchViewState extends State<SearchView> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onChanged(String query) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      context.read<SearchCubit>().search(query);
+    });
   }
 
   @override
@@ -51,13 +63,13 @@ class SearchViewState extends State<SearchView> {
             hintText: 'Search movies & series...',
             border: InputBorder.none,
           ),
-          onChanged: (query) => context.read<SearchCubit>().search(query),
+          onChanged: _onChanged,
         ),
       ),
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const SearchResultsSkeleton();
           }
           if (state.movies.isEmpty && state.series.isEmpty) {
             return const Center(child: Text('No results found'));
@@ -76,6 +88,7 @@ class SearchViewState extends State<SearchView> {
                     separatorBuilder: (_, _) => const SizedBox(width: 10),
                     itemBuilder: (_, index) {
                       final movie = state.movies[index];
+                      final tag = 'search_movie_${movie.id}';
                       return SizedBox(
                         width: 120,
                         child: MediaCard(
@@ -83,7 +96,8 @@ class SearchViewState extends State<SearchView> {
                           title: movie.title,
                           posterPath: movie.posterPath,
                           voteAverage: movie.voteAverage,
-                          onTap: () => context.push('/movie/${movie.id}'),
+                          heroTag: tag,
+                          onTap: () => context.push('/movie/${movie.id}', extra: tag),
                         ),
                       );
                     },
@@ -102,6 +116,7 @@ class SearchViewState extends State<SearchView> {
                     separatorBuilder: (_, _) => const SizedBox(width: 10),
                     itemBuilder: (_, index) {
                       final series = state.series[index];
+                      final tag = 'search_series_${series.id}';
                       return SizedBox(
                         width: 120,
                         child: MediaCard(
@@ -109,7 +124,8 @@ class SearchViewState extends State<SearchView> {
                           title: series.name,
                           posterPath: series.posterPath,
                           voteAverage: series.voteAverage,
-                          onTap: () => context.push('/series/${series.id}'),
+                          heroTag: tag,
+                          onTap: () => context.push('/series/${series.id}', extra: tag),
                         ),
                       );
                     },

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_test/core/usecase/usecase.dart';
 import 'package:movie_test/core/utils/data_state.dart';
 import 'package:movie_test/features/movies/domain/entities/movie.dart';
 import 'package:movie_test/features/movies/domain/usecases/get_popular_movies.dart';
@@ -26,8 +25,8 @@ class SearchCubit extends Cubit<SearchState> {
 
   Future<void> _loadPopular() async {
     emit(state.copyWith(isLoading: true));
-    final moviesResult = await getPopularMovies(const NoParams());
-    final seriesResult = await getPopularSeries(const NoParams());
+    final moviesResult = await getPopularMovies(1);
+    final seriesResult = await getPopularSeries(1);
     emit(state.copyWith(
       isLoading: false,
       movies: moviesResult is DataSuccess<List<Movie>> ? moviesResult.data : [],
