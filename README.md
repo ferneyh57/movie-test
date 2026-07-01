@@ -2,9 +2,7 @@
 
 ## Demo
 
-[▶ Ver demo](demo.mp4)
-
-> Para ver el video inline en GitHub: abre un Issue o PR en el repo, arrastra `demo.mp4` al editor de texto, copia la URL `https://github.com/user-attachments/assets/...` que genera, y reemplaza esta sección con `<video src="URL" controls></video>`.
+<video src="https://github.com/ferneyh57/movie-test/releases/download/demo-v1/demo.mp4" controls width="320"></video>
 
 Flutter app que consume la [TMDB API](https://developers.themoviedb.org/) para explorar películas y series.
 
