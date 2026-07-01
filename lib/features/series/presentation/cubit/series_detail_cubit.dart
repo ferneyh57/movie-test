@@ -8,7 +8,7 @@ class SeriesDetailCubit extends Cubit<SeriesDetailState> {
   final UseCase<DataState<Series>, int> getSeriesDetail;
 
   SeriesDetailCubit({required this.getSeriesDetail})
-      : super(const SeriesDetailState());
+    : super(const SeriesDetailState());
 
   Future<void> load(int id) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
@@ -16,7 +16,9 @@ class SeriesDetailCubit extends Cubit<SeriesDetailState> {
     if (result is DataSuccess<Series>) {
       emit(state.copyWith(series: result.data, isLoading: false));
     } else if (result is DataFailure<Series>) {
-      emit(state.copyWith(isLoading: false, errorMessage: result.failure.message));
+      emit(
+        state.copyWith(isLoading: false, errorMessage: result.failure.message),
+      );
     }
   }
 }

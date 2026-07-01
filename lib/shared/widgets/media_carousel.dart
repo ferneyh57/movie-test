@@ -46,7 +46,9 @@ class MediaCarouselState<T> extends State<MediaCarousel<T>> {
   }
 
   void _onScroll() {
-    if (_requestingMore || !_scrollController.hasClients || !widget.hasMore) return;
+    if (_requestingMore || !_scrollController.hasClients || !widget.hasMore) {
+      return;
+    }
     final threshold = _scrollController.position.maxScrollExtent - 200;
     if (_scrollController.offset >= threshold) {
       _requestingMore = true;
@@ -63,10 +65,9 @@ class MediaCarouselState<T> extends State<MediaCarousel<T>> {
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
           child: Text(
             widget.title,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(

@@ -11,17 +11,23 @@ void main() {
       });
 
       test('true when page < totalPages', () {
-        final state = MovieListState(response: moviePage(page: 1, totalPages: 3));
+        final state = MovieListState(
+          response: moviePage(page: 1, totalPages: 3),
+        );
         expect(state.hasMore, isTrue);
       });
 
       test('false when page == totalPages', () {
-        final state = MovieListState(response: moviePage(page: 3, totalPages: 3));
+        final state = MovieListState(
+          response: moviePage(page: 3, totalPages: 3),
+        );
         expect(state.hasMore, isFalse);
       });
 
       test('false when page > totalPages', () {
-        final state = MovieListState(response: moviePage(page: 4, totalPages: 3));
+        final state = MovieListState(
+          response: moviePage(page: 4, totalPages: 3),
+        );
         expect(state.hasMore, isFalse);
       });
     });
@@ -33,9 +39,7 @@ void main() {
 
       test('maps results to Movie entities', () {
         final model = movieModel(id: 42);
-        final state = MovieListState(
-          response: moviePage(results: [model]),
-        );
+        final state = MovieListState(response: moviePage(results: [model]));
         expect(state.movies.length, 1);
         expect(state.movies.first.id, 42);
         expect(state.movies.first.title, 'Movie 42');

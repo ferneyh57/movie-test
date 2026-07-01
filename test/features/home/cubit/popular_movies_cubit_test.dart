@@ -24,7 +24,9 @@ void main() {
       blocTest<PopularMoviesCubit, MovieListState>(
         'emits loaded state on success',
         setUp: () {
-          when(() => mockUseCase()).thenAnswer((_) async => DataSuccess(moviePage()));
+          when(
+            () => mockUseCase(),
+          ).thenAnswer((_) async => DataSuccess(moviePage()));
         },
         build: buildCubit,
         expect: () => [MovieListState(response: moviePage())],
@@ -33,9 +35,9 @@ void main() {
       blocTest<PopularMoviesCubit, MovieListState>(
         'emits empty state on failure',
         setUp: () {
-          when(() => mockUseCase()).thenAnswer(
-            (_) async => const DataFailure(NetworkFailure('error')),
-          );
+          when(
+            () => mockUseCase(),
+          ).thenAnswer((_) async => const DataFailure(NetworkFailure('error')));
         },
         build: buildCubit,
         expect: () => [const MovieListState()],
@@ -43,14 +45,24 @@ void main() {
     });
 
     group('loadMore', () {
-      final page1 = moviePage(page: 1, totalPages: 2, results: [movieModel(id: 1)]);
-      final page2 = moviePage(page: 2, totalPages: 2, results: [movieModel(id: 2)]);
+      final page1 = moviePage(
+        page: 1,
+        totalPages: 2,
+        results: [movieModel(id: 1)],
+      );
+      final page2 = moviePage(
+        page: 2,
+        totalPages: 2,
+        results: [movieModel(id: 2)],
+      );
 
       blocTest<PopularMoviesCubit, MovieListState>(
         'appends results and updates page',
         setUp: () {
           when(() => mockUseCase()).thenAnswer((_) async => DataSuccess(page1));
-          when(() => mockUseCase(2)).thenAnswer((_) async => DataSuccess(page2));
+          when(
+            () => mockUseCase(2),
+          ).thenAnswer((_) async => DataSuccess(page2));
         },
         build: buildCubit,
         act: (cubit) async {
@@ -73,8 +85,9 @@ void main() {
       blocTest<PopularMoviesCubit, MovieListState>(
         'does nothing when on last page',
         setUp: () {
-          when(() => mockUseCase())
-              .thenAnswer((_) async => DataSuccess(moviePage(page: 3, totalPages: 3)));
+          when(() => mockUseCase()).thenAnswer(
+            (_) async => DataSuccess(moviePage(page: 3, totalPages: 3)),
+          );
         },
         build: buildCubit,
         act: (cubit) async {
@@ -89,7 +102,9 @@ void main() {
         'ignores concurrent loadMore calls',
         setUp: () {
           when(() => mockUseCase()).thenAnswer((_) async => DataSuccess(page1));
-          when(() => mockUseCase(2)).thenAnswer((_) async => DataSuccess(page2));
+          when(
+            () => mockUseCase(2),
+          ).thenAnswer((_) async => DataSuccess(page2));
         },
         build: buildCubit,
         act: (cubit) async {
